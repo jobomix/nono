@@ -1,0 +1,16 @@
+{
+  "name": "express-server",
+  "version": "1.0.0",
+  "description": "Restfult web services",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Bruno Abitbol",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "~4.15.2",
+    "mongoose": "^4.7.0"
+  }
+}

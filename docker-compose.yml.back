@@ -1,0 +1,37 @@
+version: '2' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+  angular: # name of the first service
+    volumes:
+      - ./angular-client:/app
+    build: angular-client # specify the directory of the Dockerfile
+    ports:
+      - "4200:4200" # specify port forwarding
+
+  express: #name of the second service
+    build: express-server # specify the directory of the Dockerfile
+    ports:
+      - "3000:3000" #specify ports forwarding
+    links:
+      - database
+
+  database: # name of the third service
+    image: mongo # specify image to build container from
+    ports:
+      - "27017:27017" # specify port forwarding
+
+  mysql: #used by traccar
+    image: mysql
+    ports:
+      - "3306:3306" #default mysql ports
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+
+  elasticsearch: # elastic search
+    volumes:
+      - ./elasticsearch/data:/data
+    build: elastic-search # specify the directory of the Dockerfile
+    ports:
+      - "9200:9200" # specify port forwarding
+      - "9300:9300"
