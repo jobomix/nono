@@ -4,8 +4,7 @@ const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
 
-// Get our API routes
-const api = require('./routes/api');
+const elastic = require('./routes/elastic');
 
 const app = express();
 
@@ -20,8 +19,7 @@ app.use(function(req, res, next) {
     next()
 })
 
-// Set our api routes
-app.use('/', api);
+app.use('/elastic',elastic);
 
 /**
  * Get port from environment and store in Express.

@@ -3,6 +3,8 @@ version: '2' # specify docker-compose version
 # Define the services/containers to be run
 services:
   angular: # name of the first service
+    volumes:
+      - ./angular-client:/usr/src/app
     build: angular-client # specify the directory of the Dockerfile
     ports:
       - "4200:4200" # specify port forwarding
@@ -13,6 +15,8 @@ services:
       - "3000:3000" #specify ports forwarding
     links:
       - elasticsearch1
+    volumes:
+      - ./express-server:/usr/src/app
 
   elasticsearch1:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.4.0
@@ -28,10 +32,10 @@ services:
     mem_limit: 1g
     volumes:
       - esdata1:/usr/share/elasticsearch/data
+      - ./elastic-search/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - 9200:9200
 
 volumes:
   esdata1:
     driver: local
-

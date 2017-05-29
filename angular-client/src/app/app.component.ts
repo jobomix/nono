@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   title = 'app works! ';
 
   // Link to our api, pointing to localhost
-  API = 'http://localhost:3000';
+  API = 'http://localhost:3000/elastic';
 
   // Declare empty list of people
   people: any[] = [];
@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
       .map(res => res.json())
       .subscribe(people => {
         console.log(people)
+        console.log('Hi ####');
         this.people = people
       })
   }

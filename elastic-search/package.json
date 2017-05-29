@@ -1,0 +1,14 @@
+{
+  "name": "elastic-search",
+  "version": "1.0.0",
+  "description": "set of tools to interact with elastic search",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bruno Abitbol",
+  "license": "ISC",
+  "dependencies": {
+    "elasticsearch": "^13.0.1"
+  }
+}
