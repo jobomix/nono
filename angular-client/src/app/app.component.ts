@@ -42,7 +42,6 @@ export class AppComponent implements OnInit {
       .map(res => res.json())
       .subscribe(people => {
         console.log(people)
-        console.log('Hi ####');
         this.people = people
       })
   }
