@@ -41,7 +41,6 @@ export class AppComponent implements OnInit {
     this.http.get(`${this.API}/users`)
       .map(res => res.json())
       .subscribe(people => {
-        console.log(people)
         this.people = people
       })
   }

@@ -24,10 +24,12 @@ router.get('/', (req, res) => {
 
 router.get('/users', (req, res) => {
   client.search({
-    index: 'megacorp',
-    type: 'employee'
+    index: 'users',
+    type: 'providers',
+    _source: ['tweet_desc','main_photo_link']
   }).then(function (resp) {
     var hits = resp.hits.hits;
+
     res.send(hits);
   }, function (err) {
     console.trace(err.message);

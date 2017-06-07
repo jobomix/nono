@@ -13,12 +13,14 @@
   "license": "ISC",
   "dependencies": {
     "@types/es6-shim": "^0.31.33",
-    "elasticsearch": "^13.0.1"
+    "elasticsearch": "^13.0.1",
+    "sync-request": "^4.0.3"
   },
   "devDependencies": {
     "@types/node": "^7.0.22",
     "elastic-import": "^1.2.0",
     "nodemon": "^1.11.0",
+    "sleep": "^5.1.1",
     "ts-node": "^3.0.4",
     "typescript": "^2.3.3"
   }

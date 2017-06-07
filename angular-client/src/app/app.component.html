@@ -5,9 +5,9 @@
   </div>
 </nav>
 
+<!-- main container -->
 <div class="container">
   <div [style.margin-top.px]="10" class="row">
-    <h3>Geo position</h3>
     <form class="form-inline">
       <div class="form-group">
         <label for="name">lat</label>
@@ -21,10 +21,15 @@
     </form>
   </div>
   <div [style.margin-top.px]="10" class="row">
-    <h3>People</h3>
+
     <!-- Bootstrap Card -->
-    <div [style.margin-right.px]="10" class="card card-block col-md-3" *ngFor="let person of people">
-      <h4 class="card-title">{{person._source.first_name}}  {{person._source.last_name}}</h4>
+    <div class="col-lg-3 col-md-4 col-xs-6 thumb" *ngFor="let person of people">
+      <div>
+        <a class="thumbnail" href="#">
+          <img src="{{person._source.main_photo_link}}">
+        </a>
+      </div>
+      <div style="width:170px;" class="small">{{person._source.tweet_desc}}</div>
     </div>
   </div>
 </div>
