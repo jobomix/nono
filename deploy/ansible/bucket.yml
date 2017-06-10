@@ -1,0 +1,21 @@
+- name: add latest cloudformation templates to s3
+  hosts: localhost
+  gather_facts: False
+
+  vars_files:
+    - vars/global.yml
+
+  tasks:
+    - s3_bucket:
+        name: "{{ deploy_bucket }}"
+        region: "{{ ec2_region }}"
+        state: present
+
+    - s3_sync:
+        bucket: "{{ deploy_bucket }}"
+        region: "{{ ec2_region }}"
+        file_root: "{{ playbook_dir }}/../cloudformation"
+        permission: public-read
+        include: "*.yaml"
+
+

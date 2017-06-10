@@ -1,0 +1,3 @@
+ec2_region: us-west-2
+deploy_bucket: nonos-deploy
+
