@@ -2,9 +2,7 @@ var Importer = require('elastic-import/lib/importer');
 var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
-var http = require('request-promise-json');
 var sleep = require('sleep');
-var rp = require('request-promise');
 var sr = require('sync-request');
 var es = require('elasticsearch');
 

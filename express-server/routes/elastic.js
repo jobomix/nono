@@ -2,8 +2,9 @@ const elasticsearch = require('elasticsearch');
 const express = require('express');
 const router = express.Router();
 
+
 const client = elasticsearch.Client({
-  hosts: ['http://elasticsearch1:9200'],
+  hosts: [`${process.env.ES_HOST}`],
   log: 'trace'
 });
 
