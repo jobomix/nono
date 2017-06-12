@@ -41,4 +41,5 @@ yarn.lock
 # System Files
 .DS_Store
 Thumbs.db
+.retry
 

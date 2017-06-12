@@ -1,0 +1,119 @@
+- name: provision dev stack
+  hosts: localhost
+  gather_facts: False
+
+  vars_files:
+    - vars/global.yml
+
+  tasks:
+    - name: Set up VPC
+      cloudformation:
+        stack_name: "dev-nonos-vpc"
+        state: "present"
+        region: "{{ ec2_region }}"
+        disable_rollback: false
+        template: "{{ playbook_dir }}/files/dev/vpc.yaml"
+        template_parameters:
+          EnvironmentName: "dev-nonos"
+          VpcCIDR:            10.180.0.0/16
+          PublicSubnet1CIDR:  10.180.8.0/21
+          PublicSubnet2CIDR:  10.180.16.0/21
+          PrivateSubnet1CIDR: 10.180.24.0/21
+          PrivateSubnet2CIDR: 10.180.32.0/21
+        tags:
+          Stack: "dev-nonos-vpc"
+      register: vpc
+
+    - name: logs the results out
+      debug: var=vpc
+
+    - name: Set up Security groups
+      cloudformation:
+        stack_name: "dev-nonos-security-groups"
+        state: "present"
+        region: "{{ ec2_region }}"
+        disable_rollback: false
+        template: "{{ playbook_dir }}/files/dev/security-groups.yaml"
+        template_parameters:
+          EnvironmentName: "dev-nonos"
+          VPC: "{{ vpc.stack_outputs.VPC }}"
+        tags:
+          Stack: "dev-nonos-security-groups"
+      register: security_groups
+
+    - name: logs the results out
+      debug: var=security_groups
+
+    - name: Set up ALB
+      cloudformation:
+        stack_name: "dev-nonos-alb"
+        state: "present"
+        region: "{{ ec2_region }}"
+        disable_rollback: false
+        template: "{{ playbook_dir }}/files/dev/load-balancers.yaml"
+        template_parameters:
+          EnvironmentName: "dev-nonos"
+          VPC: "{{ vpc.stack_outputs.VPC }}"
+          Subnets: "{{ vpc.stack_outputs.PublicSubnet1 }} , {{ vpc.stack_outputs.PublicSubnet2 }}"
+          SecurityGroup: "{{ security_groups.stack_outputs.LoadBalancerSecurityGroup }}"
+        tags:
+          Stack: "dev-nonos-alb"
+      register: alb
+
+    - name: logs the results out
+      debug: var=alb
+
+    - name: Set up ECS cluster
+      cloudformation:
+        stack_name: "dev-nonos-ecs"
+        state: "present"
+        region: "{{ ec2_region }}"
+        disable_rollback: false
+        template: "{{ playbook_dir }}/files/dev/ecs-cluster.yaml"
+        template_parameters:
+          EnvironmentName: "dev-nonos"
+          InstanceType: t2.small
+          ClusterSize: "2"
+          VPC: "{{ vpc.stack_outputs.VPC }}"
+          Subnets: "{{ vpc.stack_outputs.PrivateSubnets }}"
+          SecurityGroup: "{{ security_groups.stack_outputs.ECSHostSecurityGroup }}"
+        tags:
+          Stack: "dev-nonos-ecs"
+      register: ecs
+
+    - name: logs the results out
+      debug: var=ecs
+
+    - name: Set up Elastic Search
+      cloudformation:
+        stack_name: "dev-nonos-services-es"
+        state: "present"
+        region: "{{ ec2_region }}"
+        disable_rollback: false
+        template: "{{ playbook_dir }}/files/dev/elastic-search.yaml"
+        template_parameters:
+          VPC: "{{ vpc.stack_outputs.VPC }}"
+          Cluster: "{{ ecs.stack_outputs.Cluster }}"
+          DesiredCount: "1"
+          Listener: "{{ alb.stack_outputs.Listener }}"
+          Path: "/products"
+        tags:
+          Stack: "dev-nonos-ecs"
+      register: elastic_search
+
+    - name: logs the results out
+      debug: var=elastic_search
+
+    # - s3_bucket:
+    #     name: "{{ deploy_bucket }}"
+    #     region: "{{ ec2_region }}"
+    #     state: present
+
+    # - s3_sync:
+    #     bucket: "{{ deploy_bucket }}"
+    #     region: "{{ ec2_region }}"
+    #     file_root: "{{ playbook_dir }}/../cloudformation"
+    #     permission: public-read
+    #     include: "*.yaml"
+
+
